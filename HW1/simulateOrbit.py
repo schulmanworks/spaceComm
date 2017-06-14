@@ -34,7 +34,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     term2 = (2 * deltaRn * deltaThetaN) / (rn + 1/2 * deltaRn)
     return term1 - term2
 i = 0
-for x in list(np.arange(0, 25000, deltaTSec)):#3.154e7
+for x in list(np.arange(0, 3.154e7, deltaTSec)):#3.154e7
     # print(i)
     # i += 1
     rn.append(rn[-1] + deltaRn[-1])
@@ -48,8 +48,8 @@ ax.plot(thetaN, rn)
 ax.grid(True)
 u = G * Mp
 
-Ra = max(rn) # approx
-Rp = min(rn) # approx
+Ra = max(np.absolute(rn)) # approx
+Rp = min(np.absolute(rn)) # approx
 e = (Ra - Rp) / (Ra + Rp)
 
 a = Ra / (1 + e)
@@ -58,4 +58,5 @@ m,s = divmod(T, 60)
 h,m = divmod(m, 60)
 print("e = %f and T = %f seconds" % (e, T))
 ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%d e=%f T=%d:%02d:%02d" % (r,theta,Vr,Vtheta,e,h,m,s), va='bottom')
+ax.set_rmax(Ra + 5000)
 plt.show()
