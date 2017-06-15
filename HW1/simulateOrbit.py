@@ -6,15 +6,15 @@ import pdb
 # r = np.arange(0, 2, 0.01)
 # theta = 2 * np.pi * r
 
-r = 30000.0 # km MUST BE A FLOAT
-theta = 0 # degrees
-Vr = 6.0 # km/s
-Vtheta = 5.0 # km/s
+r = 4436.82e6 # km MUST BE A FLOAT
+theta = 0.0 # degrees
+Vr = 0.0 # km/s
+Vtheta = 6.10 # km/s
 
 G = 6.672e-20 # km^3 / kg*s^2
-Mp = 5.974e24 #kg
+Mp = 1.989e30# earth 5.974e24 #kg
 
-deltaTSec = 1
+deltaTSec = 10000
 
 rn = [r] # km
 thetaN = [theta] # degrees
@@ -34,10 +34,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     term2 = (2 * deltaRn * deltaThetaN) / (rn + 1/2 * deltaRn)
     return term1 - term2
 
-totalAngle = 0
-for x in list(np.arange(0, 100e3, deltaTSec)):#3.154e7
-    # print(i)
-    # i += 1
+for x in list(np.arange(0, 864000 * 90560 , deltaTSec)):#3.154e7
     rn.append(rn[-1] + deltaRn[-1])
     thetaN.append(thetaN[-1] + deltaThetaN[-1])
     tempDeltaRn =  deltaRnPlus1(deltaRn[-1], rn[-1], deltaThetaN[-1], G, Mp, deltaTSec)
@@ -45,10 +42,6 @@ for x in list(np.arange(0, 100e3, deltaTSec)):#3.154e7
     deltaRn.append(tempDeltaRn)
     deltaThetaN.append(tempThetaN)
 
-    totalAngle += tempThetaN
-    # print(totalAngle, " ", tempThetaN, tempDeltaRn)
-    # if totalAngle > 360:
-    #     break
 ax = plt.subplot(111, projection='polar')
 ax.plot(thetaN, rn)
 ax.grid(True)
@@ -63,6 +56,7 @@ T = math.sqrt(4 * np.pi**2 * a**3 / u)
 m,s = divmod(T, 60)
 h,m = divmod(m, 60)
 print("e = %f and T = %f seconds" % (e, T))
-ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%d e=%f T=%d:%02d:%02d" % (r,theta,Vr,Vtheta,e,h,m,s), va='bottom')
+ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%02d" % (r,theta,Vr,Vtheta,e,h,m,s), va='bottom')
 ax.set_rmax(Ra + 5000)
 plt.show()
+pdb.set_trace()
