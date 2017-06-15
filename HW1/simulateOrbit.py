@@ -6,10 +6,10 @@ import pdb
 # r = np.arange(0, 2, 0.01)
 # theta = 2 * np.pi * r
 
-r = 30000 # km
+r = 30000.0 # km MUST BE A FLOAT
 theta = 0 # degrees
-Vr = 1 # km/s
-Vtheta = 2 # km/s
+Vr = 6.0 # km/s
+Vtheta = 5.0 # km/s
 
 G = 6.672e-20 # km^3 / kg*s^2
 Mp = 5.974e24 #kg
@@ -35,7 +35,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     return term1 - term2
 
 totalAngle = 0
-for x in list(np.arange(0, 3.154e7, deltaTSec)):#3.154e7
+for x in list(np.arange(0, 100e3, deltaTSec)):#3.154e7
     # print(i)
     # i += 1
     rn.append(rn[-1] + deltaRn[-1])
@@ -46,16 +46,16 @@ for x in list(np.arange(0, 3.154e7, deltaTSec)):#3.154e7
     deltaThetaN.append(tempThetaN)
 
     totalAngle += tempThetaN
-    print(totalAngle, " ", tempThetaN)
-    if totalAngle > 360:
-        break
+    # print(totalAngle, " ", tempThetaN, tempDeltaRn)
+    # if totalAngle > 360:
+    #     break
 ax = plt.subplot(111, projection='polar')
 ax.plot(thetaN, rn)
 ax.grid(True)
 u = G * Mp
 
-Ra = max(np.absolute(rn)) # approx
-Rp = min(np.absolute(rn)) # approx
+Ra = max(rn) # approx
+Rp = min(rn) # approx
 e = (Ra - Rp) / (Ra + Rp)
 
 a = Ra / (1 + e)
