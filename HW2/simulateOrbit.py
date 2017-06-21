@@ -3,9 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import pdb
-# r =
- np.arange(0, 2, 0.01)
-# theta = 2 * np.pi * r
 
 r = 46983e3 # km MUST BE A FLOAT
 theta = 0.0 # degrees
@@ -35,7 +32,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     term2 = (2 * deltaRn * deltaThetaN) / (rn + 1/2 * deltaRn)
     return term1 - term2
 
-for x in list(np.arange(0, 86164*1.2 , deltaTSec)):#3.154e7
+for x in list(np.arange(0, 86164*2 , deltaTSec)):#3.154e7
     rn.append(rn[-1] + deltaRn[-1])
     thetaN.append(thetaN[-1] + deltaThetaN[-1])
     tempDeltaRn =  deltaRnPlus1(deltaRn[-1], rn[-1], deltaThetaN[-1], G, Mp, deltaTSec)
