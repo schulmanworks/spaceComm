@@ -30,8 +30,8 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     term1 = deltaThetaN
     term2 = (2 * deltaRn * deltaThetaN) / (rn + 1/2 * deltaRn)
     return term1 - term2
-
-for x in list(np.arange(0, 1e6 , deltaTSec)):#3.154e7
+timeVector = np.arange(0, 1e5 , deltaTSec)
+for x in list(timeVector):#3.154e7
     rn.append(rn[-1] + deltaRn[-1])
     thetaN.append(thetaN[-1] + deltaThetaN[-1])
     tempDeltaRn =  deltaRnPlus1(deltaRn[-1], rn[-1], deltaThetaN[-1], G, Mp, deltaTSec)
@@ -56,4 +56,14 @@ print("e = %f and T = %f seconds" % (e, T))
 ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%.2d" % (r,theta,Vr,Vtheta,e,h,m,s), va='bottom')
 ax.set_rmax(Ra + 5000)
 ax.grid(True)
+plt.show()
+
+rn = rn[:-1]
+ax1 = plt.plot(timeVector, rn,  ms = 10, alpha=1, color='b')
+plt.grid(True)
+plt.show()
+
+thetaN = thetaN[:-1]
+ax2 = plt.plot(timeVector, thetaN, ms = 10, alpha=1, color='b')
+plt.grid(True)
 plt.show()
