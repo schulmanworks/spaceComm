@@ -7,7 +7,7 @@ import pdb
 r = 46983.0 # km MUST BE A FLOAT
 theta = 0.0 # degrees
 Vr = 0.0 # km/s
-Vtheta = 2.914 # km/s
+Vtheta = 2.74084 # km/s
 G = 6.672e-20 # km^3 / kg*s^2
 Mp = 5.974e24# earth 5.974e24 #kg
 
@@ -53,7 +53,7 @@ T = math.sqrt(4 * np.pi**2 * a**3 / u)
 m,s = divmod(T, 60)
 h,m = divmod(m, 60)
 print("e = %f and T = %f seconds" % (e, T))
-ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%02d" % (r,theta,Vr,Vtheta,e,h,m,s), va='bottom')
+ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%.2d" % (r,theta,Vr,Vtheta,e,h,m,s), va='bottom')
 ax.set_rmax(Ra + 5000)
 ax.grid(True)
 plt.show()
