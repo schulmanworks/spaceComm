@@ -52,37 +52,37 @@ for x in list(timeVector):  # 3.154e7
     deltaRn.append(tempDeltaRn)
     deltaThetaN.append(tempThetaN)
 
-ax = plt.subplot(111, projection='polar')
-ax.plot(thetaN, rn)
-ax.grid(True)
-u = G * Mp
-
-Ra = max(rn)  # approx
-Rp = min(rn)  # approx
-e = (Ra - Rp) / (Ra + Rp)
-
-a = Ra / (1 + e)
-T = math.sqrt(4 * np.pi**2 * a**3 / u)
-m, s = divmod(T, 60)
-h, m = divmod(m, 60)
-print("e = %f and T = %f seconds" % (e, T))
-ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%.2d" % (
-    r, theta, Vr, Vtheta, e, h, m, s), va='bottom')
-ax.set_rmax(Ra + 5000)
-ax.grid(True)
-plt.show()
+# ax = plt.subplot(111, projection='polar')
+# ax.plot(thetaN, rn)
+# ax.grid(True)
+# u = G * Mp
+#
+# Ra = max(rn)  # approx
+# Rp = min(rn)  # approx
+# e = (Ra - Rp) / (Ra + Rp)
+#
+# a = Ra / (1 + e)
+# T = math.sqrt(4 * np.pi**2 * a**3 / u)
+# m, s = divmod(T, 60)
+# h, m = divmod(m, 60)
+# print("e = %f and T = %f seconds" % (e, T))
+# ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%.2d" % (
+#     r, theta, Vr, Vtheta, e, h, m, s), va='bottom')
+# ax.set_rmax(Ra + 5000)
+# ax.grid(True)
+# plt.show()
 
 rn = rn[:-1]
-# simulateSSP.plotThisMotherfucker(timeVector, rn, "rn")
+simulateSSP.plotThisMotherfucker(timeVector, rn, "rn")
 
 thetaN = thetaN[:-1]
-# simulateSSP.plotThisMotherfucker(timeVector, thetaN, "thetaN")
+simulateSSP.plotThisMotherfucker(timeVector, thetaN, "thetaN")
 
 
 xarr, yarr, zarr = simulateSSP.getCart3D(rn, thetaN, phi)
-# simulateSSP.plotThisMotherfucker(timeVector, xarr, "X values")
-# simulateSSP.plotThisMotherfucker(timeVector, yarr, "Y values")
-# simulateSSP.plotThisMotherfucker(timeVector, zarr, "Z values")
+simulateSSP.plotThisMotherfucker(timeVector, xarr, "X values")
+simulateSSP.plotThisMotherfucker(timeVector, yarr, "Y values")
+simulateSSP.plotThisMotherfucker(timeVector, zarr, "Z values")
 
 elevationAngles = []
 azimuthAngles = []

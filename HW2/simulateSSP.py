@@ -19,22 +19,22 @@ def getCart3D(rn, thetaN, phi):
     YnewArr = []
     ZnewArr = []
     for radius, angle in zip(rn, thetaN):
-        c = radius * np.exp(complex(0, angle))
+        c = radius * np.exp(angle * 1j)
         Xold = np.real(c)
         Yold = np.imag(c)
 
-        XnewArr.append(np.real(Xold * np.exp(complex(0, phi))))
+        XnewArr.append(np.real(Xold * np.exp(phi * 1j)))
         YnewArr.append(Yold)
-        ZnewArr.append(np.imag(Xold * np.exp(complex(0, phi))))
+        ZnewArr.append(np.imag(Xold * np.exp(phi * 1j)))
     return XnewArr, YnewArr, ZnewArr
 
 
 def convertXYZToLatLon(x, y, z, secsFromApogee):
-    # LAT in radians does NOT change as earth rotates
+    # LAT in radians does NOT change as earth rotates. [0, 360]
     r = math.sqrt(x*x + y*y + z*z);
-    lat = (math.degrees(math.acos(z / r)) % 360)  - initialSSPLat
-    # LON in radians DOES change as earth rotates
-    lon = (math.degrees(math.atan2(y, x)) % 360) - initialSSPLon - earthRotVelRadSec * secsFromApogee
+    lat = (math.degrees(math.acos(z / r)) % 360)  + initialSSPLat
+    # LON in radians DOES change as earth rotates. [-180 , 180]
+    lon = (math.degrees(math.atan2(y, x)) % 360) - 180 + initialSSPLon - earthRotVelRadSec * secsFromApogee
     return lat, lon
 
 
