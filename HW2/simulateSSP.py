@@ -23,9 +23,9 @@ def getCart3D(rn, thetaN, phi):
         Xold = np.real(c)
         Yold = np.imag(c)
 
-        XnewArr.append(np.real(Xold * np.exp(phi * 1j)))
+        ZnewArr.append(np.real(Xold * np.exp(phi * 1j)))
         YnewArr.append(Yold)
-        ZnewArr.append(np.imag(Xold * np.exp(phi * 1j)))
+        XnewArr.append(np.imag(Xold * np.exp(phi * 1j)))
     return XnewArr, YnewArr, ZnewArr
 
 
