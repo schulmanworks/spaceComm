@@ -36,7 +36,7 @@ def getCart3D(rn, thetaN, phi):
 def convertXYZToLatLon(x, y, z, secsFromApogee):
     r = math.sqrt(x * x + y * y + z * z)
     # LAT in rad does NOT change as earth rotates. [0, 360]
-    lat = -1 * (math.acos(z / r) + math.radians(initialSSPLat)) + pi2  # ((math.degrees(math.acos(z / r)) + initialSSPLat) % 360) - 180
+    lat = -1 * (math.acos(z / r) + math.radians(initialSSPLat)) + np.pi -0.4 # ((math.degrees(math.acos(z / r)) + initialSSPLat) % 360) - 180
     # lat = math.degrees(lat)
     # LON in rad DOES change as earth rotates. [0 , 360]
     lon = (math.atan2(y, x) % pi2) - earthRotVelRadSec * secsFromApogee + math.radians(initialSSPLon)#(math.degrees(math.atan2(y, x))  + initialSSPLon - earthRotVelRadSec * secsFromApogee ) % 360
@@ -44,15 +44,15 @@ def convertXYZToLatLon(x, y, z, secsFromApogee):
 
 
 def calcGamma(Le, le, Ls, ls):
-    cosGamma = math.sin(Ls) * math.sin(Le) + math.cos(Ls) * \
-        math.cos(Le) * math.cos(ls - le)
+    cosGamma = math.sin(Ls) * math.sin(Le) + math.cos(Ls) * math.cos(Le) * math.cos(ls - le)
     gamma = math.acos(cosGamma)
     return gamma
 
 
 def calcElevationAngle(gamma, re, rs):
-    denom = math.sqrt(1 + (re / rs)**2 - 2 * (re / rs) * math.cos(gamma))
+    denom = math.sqrt(1 + ((re / rs)**2) - 2 * (re / rs) * math.cos(gamma))
     cosEl = math.sin(gamma) / denom
+    print "elevation in rad", math.acos(cosEl)
     El = math.degrees(math.acos(cosEl))
     return El
 
@@ -72,7 +72,8 @@ def getSSPRelativityToES(Le, le, Ls, ls):
 
 
 def calcAzimuth(Le, le, Ls, ls, gamma):
-    alpha = math.degrees(math.sin(math.fabs(le - ls)) * math.cos(Ls) / math.sin(gamma))
+    sinalpha = math.sin(math.fabs(le - ls)) * math.cos(Ls) / math.sin(gamma)
+    alpha = math.degrees(math.asin(sinalpha))
     compass = getSSPRelativityToES(Le, le, Ls, ls)
     print "compass", compass, "alpha", alpha
     if compass == "NE":

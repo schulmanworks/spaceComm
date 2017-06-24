@@ -21,8 +21,8 @@ deltaRn = [Vr * deltaTSec]  # km
 deltaThetaN = [Vtheta * deltaTSec / r]  # degrees / km
 
 # hw2 new constants
-Le = 47.6062  # degrees
-le = 360 - 122.3321  # degrees
+Le = 25.7617#47.6062  # degrees
+le = 360-80.1918 #360 - 122.3321  # degrees
 earthRadius = 6371.0  # km
 phi = 63.4
 simulateSSP.initialSSPLat = 63.4  # degrees
@@ -43,7 +43,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     return term1 - term2
 
 
-timeVector = np.arange(0, 86400, deltaTSec)
+timeVector = np.arange(0, 86165, deltaTSec)
 for x in list(timeVector):  # 3.154e7
     rn.append(rn[-1] + deltaRn[-1])
     thetaN.append(thetaN[-1] + deltaThetaN[-1])
@@ -90,6 +90,7 @@ elevationAngles = []
 azimuthAngles = []
 lons = []
 lats = []
+gammas = []
 i = 0
 visible = 0
 for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
@@ -98,6 +99,7 @@ for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
     lons.append(ls)
     lats.append(Ls)
     gamma = simulateSSP.calcGamma(Le, le, Ls, ls)
+    gammas.append(gamma)
     # horizon check
     # pdb.set_trace()
     print "gamma", gamma, "math.acos", math.acos(earthRadius / satRadius)
@@ -109,7 +111,7 @@ for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
         visible += 1
     i += 1
 print "visible", visible, "i", i
-m, s = divmod(visible / deltaTSec, 60)
+m, s = divmod(visible * deltaTSec, 60)
 h, m = divmod(m, 60)
 print "Visible for %d:%02d:%.2d" % (h,m,s)
 simulateSSP.plotThisMotherfucker(timeVector, lons, "lons")
@@ -117,3 +119,4 @@ simulateSSP.plotThisMotherfucker(timeVector, lats, "lats")
 simulateSSP.plotThisMotherfucker(lons, lats, "lons vs lats")
 simulateSSP.plotThisMotherfucker(
     azimuthAngles, elevationAngles, "Azimuth vs Elevation")
+simulateSSP.plotThisMotherfucker(timeVector, gammas, "gammas")
