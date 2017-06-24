@@ -13,7 +13,7 @@ Vtheta = 2.74109  # km/s
 G = 6.672e-20  # km^3 / kg*s^2
 Mp = 5.974e24  # earth 5.974e24 #kg
 
-deltaTSec = 1
+deltaTSec = 10
 
 rn = [r]  # km
 thetaN = [theta]  # degrees
@@ -21,12 +21,13 @@ deltaRn = [Vr * deltaTSec]  # km
 deltaThetaN = [Vtheta * deltaTSec / r]  # degrees / km
 
 # hw2 new constants
-Le = 0  # degrees
-le = 0  # degrees
-earthRadius = 6371  # km
+Le = 47.6062  # degrees
+le = 360 - 122.3321  # degrees
+earthRadius = 6371.0  # km
 phi = 63.4
-simulateSSP.initialSSPLat = 63.4 # degrees
-simulateSSP.initialSSPLon = -96 # degrees
+simulateSSP.initialSSPLat = 63.4  # degrees
+simulateSSP.initialSSPLon = 360-96.0  # degrees
+
 
 def deltaRnPlus1(deltaRn, rn, deltaThetaN, G, Mp, deltaTSec):
     term1 = deltaRn
@@ -42,7 +43,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     return term1 - term2
 
 
-timeVector = np.arange(0, 9e4, deltaTSec)
+timeVector = np.arange(0, 86400, deltaTSec)
 for x in list(timeVector):  # 3.154e7
     rn.append(rn[-1] + deltaRn[-1])
     thetaN.append(thetaN[-1] + deltaThetaN[-1])
@@ -52,25 +53,25 @@ for x in list(timeVector):  # 3.154e7
     deltaRn.append(tempDeltaRn)
     deltaThetaN.append(tempThetaN)
 
-ax = plt.subplot(111, projection='polar')
-ax.plot(thetaN, rn)
-ax.grid(True)
-u = G * Mp
-
-Ra = max(rn)  # approx
-Rp = min(rn)  # approx
-e = (Ra - Rp) / (Ra + Rp)
-
-a = Ra / (1 + e)
-T = math.sqrt(4 * np.pi**2 * a**3 / u)
-m, s = divmod(T, 60)
-h, m = divmod(m, 60)
-print("e = %f and T = %f seconds" % (e, T))
-ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%.2d" % (
-    r, theta, Vr, Vtheta, e, h, m, s), va='bottom')
-ax.set_rmax(Ra + 5000)
-ax.grid(True)
-plt.show()
+# ax = plt.subplot(111, projection='polar')
+# ax.plot(thetaN, rn)
+# ax.grid(True)
+# u = G * Mp
+#
+# Ra = max(rn)  # approx
+# Rp = min(rn)  # approx
+# e = (Ra - Rp) / (Ra + Rp)
+#
+# a = Ra / (1 + e)
+# T = math.sqrt(4 * np.pi**2 * a**3 / u)
+# m, s = divmod(T, 60)
+# h, m = divmod(m, 60)
+# print("e = %f and T = %f seconds" % (e, T))
+# ax.set_title("Orbit r=%d theta=%d Vr=%d Vtheta=%.4f e=%.4f T=%d:%02d:%.2d" % (
+#     r, theta, Vr, Vtheta, e, h, m, s), va='bottom')
+# ax.set_rmax(Ra + 5000)
+# ax.grid(True)
+# plt.show()
 
 rn = rn[:-1]
 # simulateSSP.plotThisMotherfucker(timeVector, rn, "rn")
@@ -80,6 +81,7 @@ thetaN = thetaN[:-1]
 
 
 xarr, yarr, zarr = simulateSSP.getCart3D(rn, thetaN, phi)
+
 # simulateSSP.plotThisMotherfucker(timeVector, xarr, "X values")
 # simulateSSP.plotThisMotherfucker(timeVector, yarr, "Y values")
 # simulateSSP.plotThisMotherfucker(timeVector, zarr, "Z values")
@@ -89,6 +91,7 @@ azimuthAngles = []
 lons = []
 lats = []
 i = 0
+visible = 0
 for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
     # print "i", i
     Ls, ls = simulateSSP.convertXYZToLatLon(x, y, z, deltaTSec * i)
@@ -97,12 +100,20 @@ for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
     gamma = simulateSSP.calcGamma(Le, le, Ls, ls)
     # horizon check
     # pdb.set_trace()
-    if gamma <= math.acos(earthRadius / satRadius):
+    print "gamma", gamma, "math.acos", math.acos(earthRadius / satRadius)
+    if gamma  <= math.acos(earthRadius / satRadius):
         El = simulateSSP.calcElevationAngle(gamma, earthRadius, satRadius)
         Az = simulateSSP.calcAzimuth(Le, le, Ls, ls, gamma)
         elevationAngles.append(El)
         azimuthAngles.append(Az)
+        visible += 1
     i += 1
+print "visible", visible, "i", i
+m, s = divmod(visible / deltaTSec, 60)
+h, m = divmod(m, 60)
+print "Visible for %d:%02d:%.2d" % (h,m,s)
 simulateSSP.plotThisMotherfucker(timeVector, lons, "lons")
 simulateSSP.plotThisMotherfucker(timeVector, lats, "lats")
-simulateSSP.plotThisMotherfucker(azimuthAngles, elevationAngles, "Azimuth vs Elevation")
+simulateSSP.plotThisMotherfucker(lons, lats, "lons vs lats")
+simulateSSP.plotThisMotherfucker(
+    azimuthAngles, elevationAngles, "Azimuth vs Elevation")
