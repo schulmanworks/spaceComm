@@ -13,7 +13,7 @@ Vtheta = 2.74109  # km/s
 G = 6.672e-20  # km^3 / kg*s^2
 Mp = 5.974e24  # earth 5.974e24 #kg
 
-deltaTSec = 10.0
+deltaTSec = 1.0
 
 rn = [r]  # km
 thetaN = [theta]  # degrees
@@ -43,7 +43,7 @@ def deltaThetaNPlus1(deltaThetaN, deltaRn, rn):
     return term1 - term2
 
 
-timeVector = np.arange(0, 86165, deltaTSec)
+timeVector = np.arange(0, 86164, deltaTSec)
 for x in list(timeVector):  # 3.154e7
     rn.append(rn[-1] + deltaRn[-1])
     thetaN.append(thetaN[-1] + deltaThetaN[-1])
@@ -85,6 +85,11 @@ xarr, yarr, zarr = simulateSSP.getCart3D(rn, thetaN, phi)
 # simulateSSP.plotThisMotherfucker(timeVector, xarr, "X values")
 # simulateSSP.plotThisMotherfucker(timeVector, yarr, "Y values")
 # simulateSSP.plotThisMotherfucker(timeVector, zarr, "Z values")
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(xarr, yarr, zs = zarr, label='XYZ plot in 3D')
+plt.show()
 
 elevationAngles = []
 azimuthAngles = []
@@ -103,7 +108,7 @@ for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
     gammas.append(gamma)
     # horizon check
     # pdb.set_trace()
-    print "gamma", gamma, "math.acos", math.acos(earthRadius / satRadius)
+    # print "gamma", gamma, "math.acos", math.acos(earthRadius / satRadius)
     if gamma <= math.acos(earthRadius / satRadius):
         El = simulateSSP.calcElevationAngle(gamma, earthRadius, satRadius)
         Az, alpha = simulateSSP.calcAzimuth(Le, le, Ls, ls, gamma)
