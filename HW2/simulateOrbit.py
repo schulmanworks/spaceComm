@@ -21,8 +21,8 @@ deltaRn = [Vr * deltaTSec]  # km
 deltaThetaN = [Vtheta * deltaTSec / r]  # degrees / km
 
 # hw2 new constants
-Le = 47.6062 #25.7617  # 47.6062  # degrees
-le = 360 - 122.3321 #360-80.1918  # 360 - 122.3321  # degrees
+Le = 24.5441#47.6062 #25.7617  # 47.6062  # degrees
+le = 360-81.8049 #360 - 122.3321 #360-80.1918  # 360 - 122.3321  # degrees
 earthRadius = 6371.0  # km
 phi = 63.4
 # simulateSSP.initialSSPLat = 63.4  # degrees
@@ -127,6 +127,5 @@ simulateSSP.plotThisMotherfucker(lons, lats, "lons vs lats",
     specialPoints=[(math.radians(le), math.radians(Le)), (math.radians(simulateSSP.initialSSPLon),
         math.radians(simulateSSP.initialSSPLat))])
 simulateSSP.plotThisMotherfucker(
-    azimuthAngles, elevationAngles, "Azimuth vs Elevation")
-simulateSSP.plotThisMotherfucker(alphas, elevationAngles, "alpohas vs elevationAngles")
+    azimuthAngles, elevationAngles, "Azimuth vs Elevation. Visible for %d:%02d:%.2d" % (h, m, s))
 # simulateSSP.plotThisMotherfucker(timeVector, gammas, "gammas")
