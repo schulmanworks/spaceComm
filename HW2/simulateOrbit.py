@@ -13,7 +13,7 @@ Vtheta = 2.74109  # km/s
 G = 6.672e-20  # km^3 / kg*s^2
 Mp = 5.974e24  # earth 5.974e24 #kg
 
-deltaTSec = 10
+deltaTSec = 10.0
 
 rn = [r]  # km
 thetaN = [theta]  # degrees
@@ -21,12 +21,12 @@ deltaRn = [Vr * deltaTSec]  # km
 deltaThetaN = [Vtheta * deltaTSec / r]  # degrees / km
 
 # hw2 new constants
-Le = 25.7617#47.6062  # degrees
-le = 360-80.1918 #360 - 122.3321  # degrees
+Le = 47.6062 #25.7617  # 47.6062  # degrees
+le = 360 - 122.3321 #360-80.1918  # 360 - 122.3321  # degrees
 earthRadius = 6371.0  # km
 phi = 63.4
-simulateSSP.initialSSPLat = 63.4  # degrees
-simulateSSP.initialSSPLon = 360-96.0  # degrees
+# simulateSSP.initialSSPLat = 63.4  # degrees
+# simulateSSP.initialSSPLon = -96.0  # degrees
 
 
 def deltaRnPlus1(deltaRn, rn, deltaThetaN, G, Mp, deltaTSec):
@@ -91,6 +91,7 @@ azimuthAngles = []
 lons = []
 lats = []
 gammas = []
+alphas = []
 i = 0
 visible = 0
 for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
@@ -103,9 +104,10 @@ for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
     # horizon check
     # pdb.set_trace()
     print "gamma", gamma, "math.acos", math.acos(earthRadius / satRadius)
-    if gamma  <= math.acos(earthRadius / satRadius):
+    if gamma <= math.acos(earthRadius / satRadius):
         El = simulateSSP.calcElevationAngle(gamma, earthRadius, satRadius)
-        Az = simulateSSP.calcAzimuth(Le, le, Ls, ls, gamma)
+        Az, alpha = simulateSSP.calcAzimuth(Le, le, Ls, ls, gamma)
+        alphas.append(alpha)
         elevationAngles.append(El)
         azimuthAngles.append(Az)
         visible += 1
@@ -113,10 +115,13 @@ for x, y, z, satRadius in zip(xarr, yarr, zarr, rn):
 print "visible", visible, "i", i
 m, s = divmod(visible * deltaTSec, 60)
 h, m = divmod(m, 60)
-print "Visible for %d:%02d:%.2d" % (h,m,s)
+print "Visible for %d:%02d:%.2d" % (h, m, s)
 simulateSSP.plotThisMotherfucker(timeVector, lons, "lons")
 simulateSSP.plotThisMotherfucker(timeVector, lats, "lats")
-simulateSSP.plotThisMotherfucker(lons, lats, "lons vs lats")
+simulateSSP.plotThisMotherfucker(lons, lats, "lons vs lats",
+    specialPoints=[(math.radians(le), math.radians(Le)), (math.radians(simulateSSP.initialSSPLon),
+        math.radians(simulateSSP.initialSSPLat))])
 simulateSSP.plotThisMotherfucker(
     azimuthAngles, elevationAngles, "Azimuth vs Elevation")
-simulateSSP.plotThisMotherfucker(timeVector, gammas, "gammas")
+simulateSSP.plotThisMotherfucker(alphas, elevationAngles, "alpohas vs elevationAngles")
+# simulateSSP.plotThisMotherfucker(timeVector, gammas, "gammas")

@@ -11,8 +11,10 @@ import pdb
 # initialSSPLat = some value
 # phi = some other value
 # deltaTSec need this from simulateOrbit somehow
-earthRotVelRadSec = 7.2921159e-5
+earthRotVelRadSec = 7.2921159e-5 # rad/sec
 pi2 = 2 * np.pi
+initialSSPLat = 63.4  # degrees
+initialSSPLon = 360 - 96.0  # degrees
 
 
 def getCart3D(rn, thetaN, phi):
@@ -35,10 +37,10 @@ def getCart3D(rn, thetaN, phi):
 
 def convertXYZToLatLon(x, y, z, secsFromApogee):
     r = math.sqrt(x * x + y * y + z * z)
-    # LAT in rad does NOT change as earth rotates. [0, 360]
-    lat = -1 * (math.acos(z / r) + math.radians(initialSSPLat)) + np.pi -0.4 # ((math.degrees(math.acos(z / r)) + initialSSPLat) % 360) - 180
+    # LAT in rad does NOT change as earth rotates. [0, pi]
+    lat =  -1*(math.acos(z / r)) + math.radians(initialSSPLat) +.57#+ np.pi # ((math.degrees(math.acos(z / r)) + initialSSPLat) % 360) - 180
     # lat = math.degrees(lat)
-    # LON in rad DOES change as earth rotates. [0 , 360]
+    # LON in rad DOES change as earth rotates. [0, 2pi]
     lon = (math.atan2(y, x) % pi2) - earthRotVelRadSec * secsFromApogee + math.radians(initialSSPLon)#(math.degrees(math.atan2(y, x))  + initialSSPLon - earthRotVelRadSec * secsFromApogee ) % 360
     return lat, lon
 
@@ -65,9 +67,9 @@ def getSSPRelativityToES(Le, le, Ls, ls):
     else:
         compass += "N"
     if le > ls:
-        compass += "E"
-    else:
         compass += "W"
+    else:
+        compass += "E"
     return compass
 
 
@@ -79,15 +81,18 @@ def calcAzimuth(Le, le, Ls, ls, gamma):
     if compass == "NE":
         return alpha
     elif compass == "SW":
-        return alpha + 180
+        return alpha + 180, alpha
     elif compass == "SE":
-        return 180 - alpha
+        return 180 - alpha, alpha
     else:
-        return 360 - alpha
+        return 360 - alpha, alpha
 
 
-def plotThisMotherfucker(x, y, title=""):
+def plotThisMotherfucker(x, y, title="", specialPoints = None):
     ax = plt.plot(x, y, ms=10, alpha=1, color='b')
+    if specialPoints != None:
+        for point in specialPoints:
+            plt.plot([point[0]], [point[1]], marker="x", color="red")
     plt.grid(True)
     plt.title(title)
     plt.show()
