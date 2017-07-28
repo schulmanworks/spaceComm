@@ -1,3 +1,6 @@
+#/usr/bin/python
+import matplotlib.pyplot as plt
+import numpy as np
 # g1(x) = x^5 + x^2 + 1
 # g2(x) = x^5 + x^4 +_ x^2 + x + 1
 import binascii
@@ -35,3 +38,22 @@ def doubleGold(g1,g2,k,s1,s2):
 v = doubleGold([1,0,1,0,0,1],[1,1,1,0,1,1], 62, [1,0,0,1,1], [1,1,0,1,0])
 print v[0:31]
 print v[31:]
+
+# c)
+s1 =[1,0,0,1,1]
+k=31
+y1 = doubleGold([1,0,1,0,0,1],[1,1,1,0,1,1], k, s1, [1,1,0,1,0])
+y2 = doubleGold([1,0,1,0,0,1],[1,1,1,0,1,1], k, s1, [1,0,0,1,1])
+x = np.arange(0,len(y1), 1)
+plt.subplot(2, 1, 1)
+plt.stem(x, y1)
+plt.title('Gold sequences')
+plt.xlabel('index')
+plt.ylabel('sequence 1')
+
+plt.subplot(2, 1, 2)
+plt.stem(x, y2)
+plt.xlabel('index')
+plt.ylabel('sequence 2')
+
+plt.show()
