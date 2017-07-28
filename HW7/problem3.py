@@ -2,6 +2,7 @@
 # g2(x) = x^5 + x^4 +_ x^2 + x + 1
 import binascii
 import pdb
+# a)
 def shift(s, g):
     feedback = s[-1]
     s_new = [feedback & g[0]]
@@ -24,4 +25,13 @@ def LFSRseq(g,k,s):
         pattern.append(curOut)
         s = shift(s, g)
     return pattern
-print LFSRseq([1,0,1,1], 8, [1,0,0])
+# print LFSRseq([1,0,1,1], 20, [1,0,0])
+
+# b)
+def doubleGold(g1,g2,k,s1,s2):
+    seq1 = LFSRseq(g1,k,s1)
+    seq2 = LFSRseq(g2,k,s2)
+    return [x1 ^ x2 for x1,x2 in zip(seq1,seq2)]
+v = doubleGold([1,0,1,0,0,1],[1,1,1,0,1,1], 62, [1,0,0,1,1], [1,1,0,1,0])
+print v[0:31]
+print v[31:]
