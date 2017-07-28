@@ -54,39 +54,37 @@ w, h = scipy.signal.freqz(bpf)
 # b)
 filtered1 = scipy.signal.lfilter(bpf, [1.0], samples1)
 filtered2 = scipy.signal.lfilter(bpf, [1.0], samples2)
-pltFFT(filtered1, period1, "FFT of signal 1 filtered")
 scipy.io.wavfile.write("orig_filt1.wave", nyq_rate1, filtered1)
 scipy.io.wavfile.write("orig_filt2.wave", nyq_rate2, filtered2)
-# pltFFT(filtered2, period2,"FFT of signal 2 filtered")
 
 # c)
 t1 = np.arange(0, len(filtered1) * period1, period1)
 filtered1Shift = filtered1 * np.cos(2 * np.pi * 10e3 * t1)
-# pltFFT(filtered1Shift, period1, "FFT of shifted signal 1")
+pltFFT(filtered1Shift, period1, "FFT of shifted signal 1")
 
 t2 = np.arange(0, len(filtered2) * period2, period2)
 filtered2Shift = filtered2 * np.cos(2 * np.pi * 18e3 * t2)
-# pltFFT(filtered2Shift, period2, "FFT of shifted signal 2")
+pltFFT(filtered2Shift, period2, "FFT of shifted signal 2")
 
 diff = len(filtered2Shift) - len(filtered1Shift)
 filtered1Shift = np.pad(filtered1Shift, (0, diff),
                         'constant', constant_values=(0,))
 
 mux = filtered2Shift + filtered1Shift #filtered2Shift +
-# fc = 14e3 * 2
-# Tc = 1 / fc
+fc = 14e3 * 2
+Tc = 1 / fc
 # Plot FFT doesn't work well for mux'd signals since there is no longer a
 # definitivie nyquist rate here.
 # pltFFT(abs(mux), Tc, "FFT of mux'd signal")
 
 # d)
-noise = np.random.normal(0, 0.01, size=len(mux))
+noise = np.random.normal(0, .01, size=len(mux))
 No = 2 * np.var(noise)
 print "No = ", No
 # pltFFT(noise, Tc, "FFT of noise with No = %f" % No)
 
-muxPlusNoise = mux #+ noise
-# pltFFT(muxPlusNoise, Tc, "FFT of mux + noise")
+muxPlusNoise = mux + noise
+pltFFT(muxPlusNoise, Tc, "FFT of mux + noise")
 
 # e)
 def downFreq(center, muxPlusNoise, period, bpf):
@@ -105,6 +103,7 @@ def downFreq(center, muxPlusNoise, period, bpf):
 
 demux_stepDown1_filt = downFreq(10e3, muxPlusNoise, period1, bpf)
 demux_stepDown2_filt = downFreq(18e3, muxPlusNoise, period2, bpf)
-pltFFT(demux_stepDown1_filt, 1/nyq_rate1, "Demux filtered 1")
+# pltFFT(demux_stepDown1_filt, 1/nyq_rate1, "Demux filtered 1")
+# pltFFT(demux_stepDown2_filt, 1/nyq_rate2, "Demux filtered 2")
 scipy.io.wavfile.write("audio_fil1_out.wave", nyq_rate1, demux_stepDown1_filt)
 scipy.io.wavfile.write("audio_fil2_out.wave", nyq_rate2, demux_stepDown2_filt)
